@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,6 +68,7 @@ public class NotificationsFragment extends Fragment {
 
     ArrayList<String> sendclasses = new ArrayList<String>();
     ArrayList<Result> mResults;
+    private ArrayList<Result> results;
 
     private View root;
     private Button mbuttonTest;
@@ -120,11 +122,42 @@ public class NotificationsFragment extends Fragment {
 
         mbuttonTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                Intent intent_next = new Intent(getActivity(), DetectedClassResult.class); //getApplicationContext()
-                intent_next.putStringArrayListExtra("classes", sendclasses);
-                startActivity(intent_next);
+                /*ArrayList<ArrayList<String>> resultsList = mResultView.getOverlapResult();
+                ArrayList<String> overlapResult = resultsList.get(0);
+                ArrayList<String> noOverlapResult = resultsList.get(1);
 
+                for (ArrayList<String> resultList : resultsList) {
+                    for (String result : resultList) {
+                        if (!overlapResult.contains(result)) {
+                            noOverlapResult.add(result);
+                        }
+                    }
+                }
+
+                Intent intent = new Intent(getContext(), DetectedClassResult.class);
+                intent.putStringArrayListExtra("Overlap", overlapResult);
+                intent.putStringArrayListExtra("NoOverlap", noOverlapResult);
+                getContext().startActivity(intent);
+
+            }*/
+                ArrayList<ArrayList<String>> resultsList = mResultView.getOverlapResult();
+                ArrayList<String> overlapResult = resultsList.get(0);
+                ArrayList<String> noOverlapResult = resultsList.get(1);
+
+                // 모달 다이얼로그 생성
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Detection Result");
+                builder.setMessage("Overlap: " + overlapResult.toString() + "\n\nNo Overlap: " + noOverlapResult.toString());
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // OK 버튼을 클릭했을 때 동작 설정
+                        dialog.dismiss(); // 다이얼로그 닫기
+                    }
+                });
+
+                // 모달 다이얼로그 표시
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -180,7 +213,8 @@ public class NotificationsFragment extends Fragment {
                             IValue[] outputTuple = mModule.forward(IValue.from(inputTensor)).toTuple();
                             final Tensor outputTensor = outputTuple[0].toTensor();
                             final float[] outputs = outputTensor.getDataAsFloatArray();
-                            final ArrayList<Result> results =  PrePostProcessor.outputsToNMSPredictions(outputs, mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY);
+                            results =  PrePostProcessor.outputsToNMSPredictions(outputs, mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY);
+
                             requireActivity().runOnUiThread(() -> {
                                 mButtonDetect.setEnabled(true);
                                 mButtonDetect.setText(getString(R.string.detect));
@@ -189,11 +223,11 @@ public class NotificationsFragment extends Fragment {
 
                                 for(Result result : mResults = results) {
                                     sendclasses.add(String.format("%s", PrePostProcessor.mClasses[result.classIndex]));
-                                    Log.v("classes", String.valueOf(sendclasses));
                                 }
 
                                 mResultView.invalidate();
                                 mResultView.setVisibility(View.VISIBLE);
+
                             });
                         }
                     });
@@ -220,7 +254,7 @@ public class NotificationsFragment extends Fragment {
         try {
             //////////////////// yolo torchscript.plt 파일 위치 /////////////////////
             mModule = LiteModuleLoader.load(assetFilePath(requireContext(), "yolov5s.torchscript.ptl"));
-            BufferedReader br = new BufferedReader(new InputStreamReader(requireActivity().getAssets().open("classes.txt")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(requireActivity().getAssets().open("classesbackup.txt")));
             String line;
             List<String> classes = new ArrayList<>();
             while ((line = br.readLine()) != null) {
