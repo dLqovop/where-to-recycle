@@ -24,7 +24,7 @@ public class PrePostProcessor {
 
     // model output is of size 25200*(num_of_class+5)
     private static int mOutputRow = 25200; // as decided by the Y`OLOv5 model for input image of size 640*640
-    private static int mOutputColumn = 85; // left, top, right, bottom, score and 80 class probability  뭔가 클래스 수 변경하는 부분이 여긴가봄.
+    private static int mOutputColumn = 12; // left, top, right, bottom, score and 80 class probability  뭔가 클래스 수 변경하는 부분이 여긴가봄.
     private static float mThreshold = 0.30f; // score above which a detection is generated
     private static int mNmsLimit = 15;
 

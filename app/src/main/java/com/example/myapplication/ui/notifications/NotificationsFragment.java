@@ -253,8 +253,8 @@ public class NotificationsFragment extends Fragment {
 
         try {
             //////////////////// yolo torchscript.plt 파일 위치 /////////////////////
-            mModule = LiteModuleLoader.load(assetFilePath(requireContext(), "yolov5s.torchscript.ptl"));
-            BufferedReader br = new BufferedReader(new InputStreamReader(requireActivity().getAssets().open("classesbackup.txt")));
+            mModule = LiteModuleLoader.load(assetFilePath(requireContext(), "best.torchscript.ptl"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(requireActivity().getAssets().open("classes.txt")));
             String line;
             List<String> classes = new ArrayList<>();
             while ((line = br.readLine()) != null) {
