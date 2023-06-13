@@ -37,6 +37,9 @@ import com.example.myapplication.ui.notifications.trashdetective.DetectedClassRe
 import com.example.myapplication.ui.notifications.trashdetective.PrePostProcessor;
 import com.example.myapplication.ui.notifications.trashdetective.Result;
 import com.example.myapplication.ui.notifications.trashdetective.ResultView;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
@@ -45,6 +48,7 @@ import org.pytorch.Tensor;
 import org.pytorch.torchvision.TensorImageUtils;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -74,6 +78,9 @@ public class NotificationsFragment extends Fragment {
     private Button mbuttonTest;
     private Button buttonSelect;
 
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+
     public static String assetFilePath(Context context, String assetName) throws IOException {
         File file = new File(context.getFilesDir(), assetName);
         if (file.exists() && file.length() > 0) {
@@ -100,31 +107,30 @@ public class NotificationsFragment extends Fragment {
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         root = binding.getRoot();
-        root = inflater.inflate(R.layout.fragment_notifications, container, false);  //setContentView(R.layout.fragment_notifications);
+        root = inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        ////////
         mImageView = root.findViewById(R.id.imageView);
         mResultView = root.findViewById(R.id.resultView);
         mbuttonTest = root.findViewById(R.id.NextPage);
         buttonSelect = root.findViewById(R.id.selectButton);
         mButtonDetect = root.findViewById(R.id.detectButton);
-        mProgressBar = (ProgressBar) root.findViewById(R.id.progressBar);
+        mProgressBar = root.findViewById(R.id.progressBar);
 
         mImageView.setImageBitmap(mBitmap);
         mResultView.setVisibility(View.INVISIBLE);
 
-
         return root;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mbuttonTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                /*ArrayList<ArrayList<String>> resultsList = mResultView.getOverlapResult();
+                ArrayList<ArrayList<String>> resultsList = mResultView.getOverlapResult();
                 ArrayList<String> overlapResult = resultsList.get(0);
-                ArrayList<String> noOverlapResult = resultsList.get(1);
+                ArrayList<String> noOverlapResult = new ArrayList<>(); // 중복되지 않는 결과를 저장하는 리스트
 
                 for (ArrayList<String> resultList : resultsList) {
                     for (String result : resultList) {
@@ -134,16 +140,6 @@ public class NotificationsFragment extends Fragment {
                     }
                 }
 
-                Intent intent = new Intent(getContext(), DetectedClassResult.class);
-                intent.putStringArrayListExtra("Overlap", overlapResult);
-                intent.putStringArrayListExtra("NoOverlap", noOverlapResult);
-                getContext().startActivity(intent);
-
-            }*/
-                ArrayList<ArrayList<String>> resultsList = mResultView.getOverlapResult();
-                ArrayList<String> overlapResult = resultsList.get(0);
-                ArrayList<String> noOverlapResult = resultsList.get(1);
-
                 // 모달 다이얼로그 생성
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Detection Result");
@@ -152,6 +148,12 @@ public class NotificationsFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // OK 버튼을 클릭했을 때 동작 설정
                         dialog.dismiss(); // 다이얼로그 닫기
+
+                        // DetectedClassResult 액티비티로 이동하는 코드 추가
+                        Intent intent = new Intent(getContext(), DetectedClassResult.class);
+                        intent.putStringArrayListExtra("Overlap", overlapResult);
+                        intent.putStringArrayListExtra("NoOverlap", noOverlapResult);
+                        getContext().startActivity(intent);
                     }
                 });
 
@@ -161,13 +163,12 @@ public class NotificationsFragment extends Fragment {
             }
         });
 
-
         buttonSelect.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mResultView.setVisibility(View.INVISIBLE);
 
                 final CharSequence[] options = {"Choose from Photos", "Take Picture", "Cancel"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext()); //MainActivity.this
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("New Test Image");
 
                 builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -187,19 +188,20 @@ public class NotificationsFragment extends Fragment {
                 builder.show();
             }
         });
+
         mButtonDetect.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mBitmap != null) {
                     mButtonDetect.setEnabled(false);
                     mButtonDetect.setText(getString(R.string.run_model));
-                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
-                    mbuttonTest.setVisibility(Button.VISIBLE);
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mbuttonTest.setVisibility(View.VISIBLE);
 
                     mImgScaleX = (float) mBitmap.getWidth() / PrePostProcessor.mInputWidth;
                     mImgScaleY = (float) mBitmap.getHeight() / PrePostProcessor.mInputHeight;
 
-                    mIvScaleX = (mBitmap.getWidth() > mBitmap.getHeight() ? (float) mImageView.getWidth() / mBitmap.getWidth() : (float) mImageView.getHeight() / mBitmap.getHeight());
-                    mIvScaleY = (mBitmap.getHeight() > mBitmap.getWidth() ? (float) mImageView.getHeight() / mBitmap.getHeight() : (float) mImageView.getWidth() / mBitmap.getWidth());
+                    mIvScaleX = (mBitmap.getWidth() > mBitmap.getHeight()) ? (float) mImageView.getWidth() / mBitmap.getWidth() : (float) mImageView.getHeight() / mBitmap.getHeight();
+                    mIvScaleY = (mBitmap.getHeight() > mBitmap.getWidth()) ? (float) mImageView.getHeight() / mBitmap.getHeight() : (float) mImageView.getWidth() / mBitmap.getWidth();
 
                     mStartX = (mImageView.getWidth() - mIvScaleX * mBitmap.getWidth()) / 2;
                     mStartY = (mImageView.getHeight() - mIvScaleY * mBitmap.getHeight()) / 2;
@@ -213,30 +215,30 @@ public class NotificationsFragment extends Fragment {
                             IValue[] outputTuple = mModule.forward(IValue.from(inputTensor)).toTuple();
                             final Tensor outputTensor = outputTuple[0].toTensor();
                             final float[] outputs = outputTensor.getDataAsFloatArray();
-                            results =  PrePostProcessor.outputsToNMSPredictions(outputs, mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY);
+                            results = PrePostProcessor.outputsToNMSPredictions(outputs, mImgScaleX, mImgScaleY, mIvScaleX, mIvScaleY, mStartX, mStartY);
 
-                            requireActivity().runOnUiThread(() -> {
-                                mButtonDetect.setEnabled(true);
-                                mButtonDetect.setText(getString(R.string.detect));
-                                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                                mResultView.setResults(results);
+                            requireActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mButtonDetect.setEnabled(true);
+                                    mButtonDetect.setText(getString(R.string.detect));
+                                    mProgressBar.setVisibility(View.INVISIBLE);
+                                    mResultView.setResults(results);
 
-                                for(Result result : mResults = results) {
-                                    sendclasses.add(String.format("%s", PrePostProcessor.mClasses[result.classIndex]));
+                                    for (Result result : mResults = results) {
+                                        sendclasses.add(String.format("%s", PrePostProcessor.mClasses[result.classIndex]));
+                                    }
+
+                                    mResultView.invalidate();
+                                    mResultView.setVisibility(View.VISIBLE);
                                 }
-
-                                mResultView.invalidate();
-                                mResultView.setVisibility(View.VISIBLE);
-
                             });
                         }
                     });
                     thread.start();
                 }
-
             }
         });
-
     }
 
     @Override
@@ -252,7 +254,6 @@ public class NotificationsFragment extends Fragment {
         }
 
         try {
-            //////////////////// yolo torchscript.plt 파일 위치 /////////////////////
             mModule = LiteModuleLoader.load(assetFilePath(requireContext(), "best.torchscript.ptl"));
             BufferedReader br = new BufferedReader(new InputStreamReader(requireActivity().getAssets().open("classes.txt")));
             String line;
@@ -267,6 +268,9 @@ public class NotificationsFragment extends Fragment {
             Log.e("Object Detection", "Error reading assets", e);
             getActivity().finish();
         }
+
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
     }
 
     @Override
@@ -288,8 +292,7 @@ public class NotificationsFragment extends Fragment {
                         Uri selectedImage = data.getData();
                         String[] filePathColumn = {MediaStore.Images.Media.DATA};
                         if (selectedImage != null) {
-                            Cursor cursor = requireActivity().getContentResolver().query(selectedImage,
-                                    filePathColumn, null, null, null);
+                            Cursor cursor = requireActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
                             if (cursor != null) {
                                 cursor.moveToFirst();
                                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
