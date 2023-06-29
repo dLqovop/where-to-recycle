@@ -48,6 +48,7 @@
 
 ### 5.2
 - 전체 페이지 구조
+
 ![image](https://github.com/dLqovop/capstone/assets/126761271/1d25b07a-8825-4de3-977c-e9786fe26bed)
 
 ###   
@@ -57,5 +58,6 @@
 
 ![image](https://github.com/dLqovop/capstone/assets/126761271/be15dd8d-8898-4fa5-b4b8-7d86c50fb409)
 - 이미지 검출 페이지
+- 갤러리에서 선택한 이미지 또는 카메라로 찍은 이미지를 검출하여 품목 감지
 
 
