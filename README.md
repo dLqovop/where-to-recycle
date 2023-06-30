@@ -56,7 +56,8 @@
 - 메인 페이지
 - 요일과 함께 상시 배출 가능 쓰레기 품목 안내
 
-![image](https://github.com/dLqovop/capstone/assets/126761271/be15dd8d-8898-4fa5-b4b8-7d86c50fb409)
+![kjhkjhKakaoTalk_20230621_080452058](https://github.com/dLqovop/capstone/assets/126761271/58852784-9f39-4691-b5b2-3b5c66c828d6)
+
 - 이미지 검출 페이지
 - paper(종이), pack(종이류),can(캔, 철류), glass(유리), pet(페트), plastic(플라스틱), vinyl(비닐) 로 품목 구분
 - 갤러리에서 선택한 이미지 또는 카메라로 찍은 이미지를 검출하여 품목 감지
@@ -64,7 +65,7 @@
 - 이미지 → 텐서로 변환 → 읽어들인 모델로 객체 탐지 → 결과값을 텐서로 변환 → 텐서에서 float형 배열로 변환 한 결과를 PrePostProcessor클래스에서 앞서 변환한 배열에서 각각의 객체 좌표를 추출 
 - 바운딩 박스가 겹친 객체와 아닌 객체를 구분하고 이에 맞추어 품목 배출 방법을 안내
 
-![image](https://github.com/dLqovop/capstone/assets/126761271/71a769d8-4d90-4515-bf0c-74d2ad2ab543)
+
 - 일회용컵, 다회용컵 두 종류를 기준으로 배출 가능 매장 위치(제주 시청 주변) 안내
 - 브랜드 별 컵 보증금 반환 방법 안내
 
