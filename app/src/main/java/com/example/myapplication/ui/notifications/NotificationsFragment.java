@@ -77,6 +77,7 @@ public class NotificationsFragment extends Fragment {
     private View root;
     private Button mbuttonTest;
     private Button buttonSelect;
+    private Button startbuttontoselect;
 
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -115,9 +116,12 @@ public class NotificationsFragment extends Fragment {
         buttonSelect = root.findViewById(R.id.selectButton);
         mButtonDetect = root.findViewById(R.id.detectButton);
         mProgressBar = root.findViewById(R.id.progressBar);
+        startbuttontoselect = root.findViewById((R.id.bigselectButton));
 
         mImageView.setImageBitmap(mBitmap);
         mResultView.setVisibility(View.INVISIBLE);
+        buttonSelect.setVisibility(View.INVISIBLE);
+        mButtonDetect.setVisibility(View.INVISIBLE);
 
         return root;
     }
@@ -160,6 +164,35 @@ public class NotificationsFragment extends Fragment {
                 // 모달 다이얼로그 표시
                 AlertDialog dialog = builder.create();
                 dialog.show();
+            }
+        });
+
+        startbuttontoselect.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mResultView.setVisibility(View.INVISIBLE);
+
+                final CharSequence[] options = {"Choose from Photos", "Take Picture", "Cancel"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("New Test Image");
+
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        if (options[item].equals("Take Picture")) {
+                            Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);
+                        } else if (options[item].equals("Choose from Photos")) {
+                            Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                            startActivityForResult(pickPhoto, 1);
+                        } else if (options[item].equals("Cancel")) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                builder.show();
+                startbuttontoselect.setVisibility(View.INVISIBLE);
+                buttonSelect.setVisibility(View.VISIBLE);
+                mButtonDetect.setVisibility(View.VISIBLE);
             }
         });
 

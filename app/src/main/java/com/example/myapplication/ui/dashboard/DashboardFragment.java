@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -44,6 +45,9 @@ public class DashboardFragment extends Fragment {
             // WebView 설정
             WebSettings webSettings = mWebView.getSettings();
             webSettings.setJavaScriptEnabled(true);
+            webSettings.setUseWideViewPort(true);
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setSupportZoom(true);
 
             // WebViewClient 설정
             mWebView.setWebViewClient(new WebViewClient());
