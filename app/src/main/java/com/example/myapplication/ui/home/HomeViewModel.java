@@ -14,11 +14,14 @@ import java.util.Locale;
 public class HomeViewModel extends ViewModel {
 
    private final MutableLiveData<String> mText;
+
     public HomeViewModel() {
         Date currentTime= Calendar.getInstance().getTime();
-        String date_text=new SimpleDateFormat("EE요일", Locale.getDefault()).format(currentTime);
+        String date_text=new SimpleDateFormat("E요일", Locale.KOREAN).format(currentTime);
         mText = new MutableLiveData<>();
         mText.setValue(date_text);
+
+
     }
 
     public LiveData<String> getText() {
