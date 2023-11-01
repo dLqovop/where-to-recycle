@@ -30,7 +30,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        button_week=(Button) button_week.findViewById(R.id.button_week);
+        button_week=root.findViewById(R.id.button_week);
 
         button_week.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        textView4=(TextView) textView4.findViewById(R.id.textView4);
+        textView4=root.findViewById(R.id.textView4);
 
         final TextView textView = binding.textView4;
 
