@@ -33,30 +33,30 @@
 
     <Button
         android:id="@+id/detectButton"
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="48dp"
-        android:text="detect"
+        android:text="Image Detection"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.841"
+        app:layout_constraintHorizontal_bias="0.912"
         app:layout_constraintStart_toEndOf="@+id/selectButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.727" />
+        app:layout_constraintVertical_bias="0.746" />
 
     <Button
         android:id="@+id/selectButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="select"
+        android:text="Select Image"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.176"
+        app:layout_constraintHorizontal_bias="0.18"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.727" />
+        app:layout_constraintVertical_bias="0.746" />
 
     <Button
         android:id="@+id/bigselectButton"
@@ -78,14 +78,13 @@
         android:id="@+id/NextPage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="modal"
+        android:text="Check Detected List"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar"
-        app:layout_constraintVertical_bias="0.744" />
+        app:layout_constraintVertical_bias="0.752" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -107,9 +106,9 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/selectButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.124"
+        app:layout_constraintHorizontal_bias="0.068"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.083" />
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

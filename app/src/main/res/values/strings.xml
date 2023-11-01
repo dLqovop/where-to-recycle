@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">쓰레기 어디로</string>
+    <string name="app_name">재활용 어디로</string>
     <string name="title_home">Home</string>
     <string name="title_Location">Cafe</string>
     <string name="title_Search">Search</string>
@@ -8,8 +8,8 @@
 
 
     <string name="image_view">Image View</string>
-    <string name="detect">Detect</string>
-    <string name="run_model">Running the model...</string>
+    <string name="detect">Image Detected</string>
+    <string name="run_model">Running...</string>
     <string name="restart">Restart</string>
-    <string name="select">Select</string>
+    <string name="select">Select Image</string>
 </resources>

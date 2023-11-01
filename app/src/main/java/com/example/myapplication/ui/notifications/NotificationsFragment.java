@@ -132,22 +132,22 @@ public class NotificationsFragment extends Fragment {
 
         mbuttonTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ArrayList<ArrayList<String>> resultsList = mResultView.getOverlapResult();
-                ArrayList<String> overlapResult = resultsList.get(0);
-                ArrayList<String> noOverlapResult = new ArrayList<>(); // 중복되지 않는 결과를 저장하는 리스트
+                ArrayList<String> resultsList = mResultView.getAllResults();
+                //ArrayList<String> overlapResult = resultsList.get(0); //오버랩 안씀
+                //ArrayList<String> noOverlapResult = resultsList.get(0); // 중복되지 않는 결과를 저장하는 리스트
 
-                for (ArrayList<String> resultList : resultsList) {
-                    for (String result : resultList) {
-                        if (!overlapResult.contains(result)) {
-                            noOverlapResult.add(result);
-                        }
-                    }
-                }
+//                for (ArrayList<String> resultList : resultsList) {
+//                    for (String result : resultList) {
+//                        if (!overlapResult.contains(result)) {
+//                            noOverlapResult.add(result);
+//                        }
+//                    }
+//                }
 
                 // 모달 다이얼로그 생성
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Detection Result");
-                builder.setMessage("Overlap: " + overlapResult.toString() + "\n\nNo Overlap: " + noOverlapResult.toString());
+                builder.setMessage("감지된 품목: " + resultsList.toString());
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // OK 버튼을 클릭했을 때 동작 설정
@@ -155,8 +155,8 @@ public class NotificationsFragment extends Fragment {
 
                         // DetectedClassResult 액티비티로 이동하는 코드 추가
                         Intent intent = new Intent(getContext(), DetectedClassResult.class);
-                        intent.putStringArrayListExtra("Overlap", overlapResult);
-                        intent.putStringArrayListExtra("NoOverlap", noOverlapResult);
+                        //intent.putStringArrayListExtra("Overlap", overlapResult); //오버랩 안씀
+                        intent.putStringArrayListExtra("NoOverlap", resultsList); //단일 품목 감지 리스트
                         getContext().startActivity(intent);
                     }
                 });

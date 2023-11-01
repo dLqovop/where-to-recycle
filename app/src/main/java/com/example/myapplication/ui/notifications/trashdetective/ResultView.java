@@ -14,12 +14,9 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-
+import java.util.HashSet;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import static com.example.myapplication.ui.notifications.trashdetective.PrePostProcessor.mClasses;
 
@@ -69,143 +66,26 @@ public class ResultView extends View {
             mPaintText.setTextSize(32);
             canvas.drawText(String.format("%s %.2f", mClasses[result.classIndex], result.score), result.rect.left + TEXT_X, result.rect.top + TEXT_Y, mPaintText);
         }
-        //Log.v("class",mClasses[result.classIndex]);
-/*
-        ArrayList<String> overlapResult = new ArrayList<>();
-        ArrayList<String> noOverlapResult = new ArrayList<>();
-        for (int i = 0; i < mResults.size(); i++) {
-            Result result1 = mResults.get(i);
-            Rect rect1 = new Rect(result1.rect);
-            RectF rectF1 = new RectF(rect1);
-            boolean isOverlap = false;
-            List<Integer> overlappingClassIndexes = new ArrayList<>();
-
-            for (int j = i + 1; j < mResults.size(); j++) {
-                Result result2 = mResults.get(j);
-                Rect rect2 = new Rect(result2.rect);
-                RectF rectF2 = new RectF(rect2);
-
-                if (RectF.intersects(rectF1, rectF2)) {
-                    // 겹치는 박스를 감지한 경우
-                    isOverlap = true;
-                    overlappingClassIndexes.add(result2.classIndex);
-                }
-            }
-            Intent intent = new Intent(getContext(), DetectedClassResult.class);
-            if (isOverlap) {
-                // 겹치는 상자들의 classIndex를 배열로 정리하여 로그로 출력
-                StringBuilder overlappingClasses = new StringBuilder();
-                overlappingClasses.append(mClasses[result1.classIndex]);
-                for (Integer classIndex : overlappingClassIndexes) {
-                    overlappingClasses.append(", ").append(mClasses[classIndex]);
-                }
-                Log.v("Overlap", "Overlap detected: " + overlappingClasses.toString());
-                //intent.putExtra("Overlap", overlappingClasses.toString());
-                overlapResult.add(overlappingClasses.toString());
-
-
-            } else {
-                // 겹치지 않는 박스의 classIndex를 로그로 출력
-                Log.v("Overlap", "No overlap detected: " + mClasses[result1.classIndex]);
-                //intent.putExtra("NoOverlap", mClasses[result1.classIndex]);
-                noOverlapResult.add(mClasses[result1.classIndex]);
-
-
-            }
-            intent.putStringArrayListExtra("Overlap", overlapResult);
-            intent.putStringArrayListExtra("NoOverlap", noOverlapResult);
-            getContext().startActivity(intent);
-
-        }
-/*
-        for (int i = 0; i < mResults.size(); i++) {
-            Result result1 = mResults.get(i);
-            Rect rect1 = new Rect(result1.rect);
-            RectF rectF1 = new RectF(rect1);
-
-            for (int j = i + 1; j < mResults.size(); j++) {
-                Result result2 = mResults.get(j);
-                Rect rect2 = new Rect(result2.rect);
-                RectF rectF2 = new RectF(rect2);
-
-                if (RectF.intersects(rectF1, rectF2)) {
-                    // 겹치는 박스를 감지한 경우
-                    String class1 = mClasses[result1.classIndex];
-                    String class2 = mClasses[result2.classIndex];
-                    Log.v("Overlap", "Overlap detected: " + class1 + " and " + class2);
-                }
-            }
-        }*/
     }
+        public ArrayList<String> getAllResults() {
+            ArrayList<String> allResults = new ArrayList<>();
 
-    public ArrayList<ArrayList<String>> getOverlapResult() {
-        ArrayList<String> overlapResult = new ArrayList<>();
-        ArrayList<String> noOverlapResult = new ArrayList<>();
-        List<Integer> overlappingClassIndexes = new ArrayList<>(); // overlappingClassIndexes 선언 및 초기화
+            HashSet<String> uniqueResults = new HashSet<>();
 
-        for (int i = 0; i < mResults.size(); i++) {
-            Result result1 = mResults.get(i);
-            Rect rect1 = new Rect(result1.rect);
-            RectF rectF1 = new RectF(rect1);
-            boolean isOverlap = false;
-
-            overlappingClassIndexes.clear(); // overlappingClassIndexes 초기화
-
-            for (int j = i + 1; j < mResults.size(); j++) {
-                Result result2 = mResults.get(j);
-                Rect rect2 = new Rect(result2.rect);
-                RectF rectF2 = new RectF(rect2);
-
-                if (RectF.intersects(rectF1, rectF2)) {
-                    // 겹치는 박스를 감지한 경우
-                    isOverlap = true;
-                    overlappingClassIndexes.add(result2.classIndex);
-                }
-            }
-
-            if (isOverlap) {
-                // 겹치하는 경우 처리
-                StringBuilder overlappingClasses = new StringBuilder();
-                overlappingClasses.append(mClasses[result1.classIndex]);
-                for (Integer classIndex : overlappingClassIndexes) {
-                    overlappingClasses.append(", ").append(mClasses[classIndex]);
-                }
-                overlapResult.add(overlappingClasses.toString());
-            } else {
-                // 겹치지 않는 경우 처리
-                noOverlapResult.add(mClasses[result1.classIndex]);
-            }
-        }
-
-        // 겹치지 않는 경우에 겹친 결과들을 noOverlapResult에서 제거
-        Iterator<String> iterator = noOverlapResult.iterator();
-        while (iterator.hasNext()) {
-            String classValue = iterator.next();
             for (int i = 0; i < mResults.size(); i++) {
                 Result result = mResults.get(i);
-                if (classValue.equals(mClasses[result.classIndex])) {
-                    for (Integer overlappingIndex : overlappingClassIndexes) {
-                        if (overlappingIndex == result.classIndex) {
-                            iterator.remove(); // 안전하게 요소를 제거
-                            break;
-                        }
-                    }
-                }
+                uniqueResults.add(mClasses[result.classIndex]);
             }
+
+            // HashSet을 ArrayList로 변환하여 반환
+            allResults.addAll(uniqueResults);
+            return allResults;
         }
 
-        // overlapResult와 noOverlapResult를 담고 있는 ArrayList를 반환
-        ArrayList<ArrayList<String>> results = new ArrayList<>();
-        results.add(overlapResult);
-        results.add(noOverlapResult);
-        return results;
-    }
 
 
 
-
-
-    public void setResults(ArrayList<Result> results) {
-        mResults = results;
+    public void setResults(ArrayList<Result> allResults) {
+        mResults = allResults;
     }
 }

@@ -34,16 +34,16 @@ public class ResultListActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            ArrayList<String> overlapResult = intent.getStringArrayListExtra("Overlap");
-            ArrayList<String> noOverlapResult = intent.getStringArrayListExtra("NoOverlap");
+            //ArrayList<String> overlapResult = intent.getStringArrayListExtra("Overlap"); //오버랩 안함
+            ArrayList<String> noOverlapResult = intent.getStringArrayListExtra("NoOverlap");//감지된 품목 단일 리스트
 
-            if (overlapResult != null) {
-                resultList.addAll(overlapResult);
-            }
+//            if (overlapResult != null) {
+//                resultList.addAll(overlapResult);
+//            } //오버랩 안함
 
             if (noOverlapResult != null) {
                 resultList.addAll(noOverlapResult);
-            }
+            } //감지된 품목 단일 리스트
 
             adapter.notifyDataSetChanged();
         }

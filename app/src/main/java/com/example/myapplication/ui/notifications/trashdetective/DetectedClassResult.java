@@ -31,12 +31,12 @@ public class DetectedClassResult extends AppCompatActivity {
         setContentView(R.layout.detected_class_result);
 
         // UI 요소 초기화
-        overlapTextView = findViewById(R.id.overlaptextview);
-        noOverlapTextView = findViewById(R.id.noOverlaptextview);
+        //overlapTextView = findViewById(R.id.overlaptextview); //오버랩 안함
+        noOverlapTextView = findViewById(R.id.noOverlaptextview); //감지된 품목 단일 리스트
         mImageView = findViewById(R.id.photoImageView);
 
-        overlapTextView.setVisibility(View.GONE);
-        noOverlapTextView.setVisibility(View.GONE);
+        //overlapTextView.setVisibility(View.GONE); //오버랩 안함
+        noOverlapTextView.setVisibility(View.GONE); //감지된 품목 단일 리스트
 
         // Firebase 데이터베이스 도우미 클래스 인스턴스 생성
         firebaseDatabaseHelper = new FirebaseDatabaseHelper();
@@ -46,43 +46,43 @@ public class DetectedClassResult extends AppCompatActivity {
         // 인텐트로 전달된 데이터 가져오기
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            ArrayList<String> overlapResult = bundle.getStringArrayList("Overlap");
+            //ArrayList<String> overlapResult = bundle.getStringArrayList("Overlap"); //오버랩 안함
             ArrayList<String> noOverlapResult = bundle.getStringArrayList("NoOverlap");
             String imagePath = bundle.getString("ImagePath");
 
-            // 중복 결과 처리
-            if (overlapResult != null && overlapResult.size() > 0) {
-                overlapTextView.setVisibility(View.VISIBLE);
-                StringBuilder overlapText = new StringBuilder();
-                for (String result : overlapResult) {
-                    overlapText.append(result).append("\n\n");
-                }
-                overlapTextView.setText(overlapText.toString());
-
-                for (String detectedClass : overlapResult) {
-                    // Firebase에서 중복된 클래스에 대한 데이터 가져오기
-                    firebaseDatabaseHelper.fetchDataForDetectedClass(detectedClass, new FirebaseDatabaseHelper.OnDataFetchListener() {
-                        @Override
-                        public void onDataFetched(String disposalDay, String disposalMethod, String type) {
-                            String resultText = "종류: " + type + "\n"
-                                    + "배출 날짜: " + disposalDay + "\n"
-                                    + "배출 방법: " + disposalMethod;
-
-                            overlapTextView.append("\n\n" + resultText);
-                        }
-
-                        @Override
-                        public void onDataNotFound() {
-                            overlapTextView.append("\n\n감지된 클래스에 대한 데이터를 찾을 수 없습니다: " + detectedClass);
-                        }
-
-                        @Override
-                        public void onDataFetchError(String errorMessage) {
-                            overlapTextView.append("\n\n감지된 클래스의 데이터를 가져오는 중 오류가 발생했습니다: " + detectedClass);
-                        }
-                    });
-                }
-            }
+//            // 중복 결과 처리
+//            if (overlapResult != null && overlapResult.size() > 0) {
+//                overlapTextView.setVisibility(View.VISIBLE);
+//                StringBuilder overlapText = new StringBuilder();
+//                for (String result : overlapResult) {
+//                    overlapText.append(result).append("\n\n");
+//                }
+//                overlapTextView.setText(overlapText.toString());
+//
+//                for (String detectedClass : overlapResult) {
+//                    // Firebase에서 중복된 클래스에 대한 데이터 가져오기
+//                    firebaseDatabaseHelper.fetchDataForDetectedClass(detectedClass, new FirebaseDatabaseHelper.OnDataFetchListener() {
+//                        @Override
+//                        public void onDataFetched(String disposalDay, String disposalMethod, String type) {
+//                            String resultText = "종류: " + type + "\n"
+//                                    + "배출 날짜: " + disposalDay + "\n"
+//                                    + "배출 방법: " + disposalMethod;
+//
+//                            overlapTextView.append("\n\n" + resultText);
+//                        }
+//
+//                        @Override
+//                        public void onDataNotFound() {
+//                            overlapTextView.append("\n\n감지된 클래스에 대한 데이터를 찾을 수 없습니다: " + detectedClass);
+//                        }
+//
+//                        @Override
+//                        public void onDataFetchError(String errorMessage) {
+//                            overlapTextView.append("\n\n감지된 클래스의 데이터를 가져오는 중 오류가 발생했습니다: " + detectedClass);
+//                        }
+//                    });
+//                }
+//            }
 
             // 중복되지 않는 결과 처리
             if (noOverlapResult != null && noOverlapResult.size() > 0) {
@@ -153,15 +153,15 @@ public class DetectedClassResult extends AppCompatActivity {
             mListButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     // 감지된 클래스 결과 리스트 생성
-                    ArrayList<String> overlapList = new ArrayList<>();
-                    overlapList.add(overlapTextView.getText().toString());
+                    //ArrayList<String> overlapList = new ArrayList<>();
+                    //overlapList.add(overlapTextView.getText().toString()); //오버랩 안함
                     ArrayList<String> noOverlapList = new ArrayList<>();
-                    noOverlapList.add(noOverlapTextView.getText().toString());
+                    noOverlapList.add(noOverlapTextView.getText().toString());//감지된 품목 단일 리스트
 
                     // ResultListActivity로 전환
                     Intent intent = new Intent(DetectedClassResult.this, ResultListActivity.class);
-                    intent.putStringArrayListExtra("Overlap", overlapList);
-                    intent.putStringArrayListExtra("NoOverlap", noOverlapList);
+                    //intent.putStringArrayListExtra("Overlap", overlapList); //오버랩 안함
+                    intent.putStringArrayListExtra("NoOverlap", noOverlapList);//감지된 품목 단일 리스트
                     startActivity(intent);
                 }
             });
