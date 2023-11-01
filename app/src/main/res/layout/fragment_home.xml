@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="59dp"
                 android:gravity="center"
-                android:text="TextView"
+                android:text="플라스틱"
                 android:textColor="#337427"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -132,7 +132,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_week"
         android:layout_width="393dp"
         android:layout_height="wrap_content"
         android:drawableRight="@drawable/baseline_navigate_next_24"
@@ -155,6 +155,18 @@
         android:stretchColumns="*"
         android:layout_margin="10dp"
         >
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="    종류별 배출방법 "
+                android:textSize="20sp"/>
+        </TableRow>
 
         <TableRow>
             <Button

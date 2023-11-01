@@ -26,6 +26,7 @@
 
         <activity android:name=".ui.notifications.trashdetective.DetectedClassResult" />
         <activity android:name=".ui.notifications.trashdetective.ResultListActivity" />
+        <activity android:name=".ui.home.homeweektrash"/>
 
     </application>
 
