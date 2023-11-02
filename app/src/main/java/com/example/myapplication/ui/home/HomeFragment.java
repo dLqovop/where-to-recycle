@@ -76,7 +76,7 @@ public class HomeFragment extends Fragment {
         //플라스틱류
         button_plastic.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent=new Intent(getContext(),homeweektrash.class);
+                Intent intent=new Intent(getContext(), trash_plastic.class);
                 startActivity(intent);
             }
         });
@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment {
         //비닐류
         button_vinyl.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent=new Intent(getContext(),homeweektrash.class);
+                Intent intent=new Intent(getContext(), trash_vinyl.class);
                 startActivity(intent);
             }
         });
@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment {
         //스티로폼
         button_styro.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent=new Intent(getContext(),homeweektrash.class);
+                Intent intent=new Intent(getContext(), trash_styro.class);
                 startActivity(intent);
             }
         });

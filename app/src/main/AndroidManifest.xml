@@ -27,6 +27,18 @@
         <activity android:name=".ui.notifications.trashdetective.DetectedClassResult" />
         <activity android:name=".ui.notifications.trashdetective.ResultListActivity" />
         <activity android:name=".ui.home.homeweektrash"/>
+        <activity android:name=".ui.home.trash_can" />
+        <activity android:name=".ui.home.trash_glass" />
+        <activity android:name=".ui.home.trash_paper" />
+        <activity android:name=".ui.home.trash_plastic" />
+        <activity android:name=".ui.home.trash_styro" />
+        <activity android:name=".ui.home.trash_vinyl" />
+
+
+
+
+
+
 
     </application>
 
